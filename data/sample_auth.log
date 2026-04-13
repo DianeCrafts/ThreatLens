@@ -1,0 +1,30 @@
+# ThreatLens sample authentication log
+# Format: ISO8601 | source_ip | service | username | STATUS | message
+# STATUS is FAIL (failed login) or SUCCESS (successful login)
+# Lines starting with # are ignored
+
+2024-01-15T08:00:00Z | 203.0.113.10 | sshd | admin | FAIL | Invalid password
+2024-01-15T08:00:15Z | 203.0.113.10 | sshd | admin | FAIL | Invalid password
+2024-01-15T08:00:30Z | 203.0.113.10 | sshd | root | FAIL | Invalid password
+2024-01-15T08:00:45Z | 203.0.113.10 | sshd | admin | FAIL | Invalid password
+2024-01-15T08:01:00Z | 203.0.113.10 | sshd | admin | FAIL | Invalid password
+2024-01-15T08:01:15Z | 203.0.113.10 | sshd | admin | FAIL | Invalid password
+2024-01-15T08:01:30Z | 203.0.113.10 | sshd | admin | SUCCESS | Accepted password
+
+2024-01-15T09:00:00Z | 198.51.100.5 | sshd | alice | FAIL | Invalid password
+2024-01-15T09:05:00Z | 198.51.100.5 | sshd | alice | FAIL | Invalid password
+2024-01-15T09:10:00Z | 198.51.100.5 | sshd | alice | FAIL | Invalid password
+
+2024-01-15T10:00:00Z | 192.0.2.20 | rdp | bob | SUCCESS | Logon successful
+2024-01-15T10:00:10Z | 192.0.2.20 | rdp | bob | SUCCESS | Session reconnect
+
+2024-01-15T11:00:00Z | 10.0.0.50 | sshd | svc | FAIL | Invalid publickey
+2024-01-15T11:00:05Z | 10.0.0.50 | sshd | svc | FAIL | Invalid publickey
+2024-01-15T11:00:10Z | 10.0.0.50 | sshd | svc | FAIL | Invalid publickey
+2024-01-15T11:00:15Z | 10.0.0.50 | sshd | svc | FAIL | Invalid publickey
+2024-01-15T11:00:20Z | 10.0.0.50 | sshd | svc | FAIL | Invalid publickey
+2024-01-15T11:00:25Z | 10.0.0.50 | sshd | svc | FAIL | Invalid publickey
+2024-01-15T11:00:30Z | 10.0.0.50 | sshd | svc | FAIL | Invalid publickey
+
+not a valid log line at all
+2024-01-15T12:00:00Z|broken no pipes

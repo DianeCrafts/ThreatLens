@@ -1,0 +1,10 @@
+paths:
+  log_file: data/sample_auth.log
+  events_output: outputs/events.json
+  alerts_output: outputs/alerts.json
+  summary_output: outputs/summary.json
+
+detection:
+  brute_force:
+    failed_attempt_threshold: 5
+    time_window_seconds: 300
