@@ -1,75 +1,145 @@
-# ThreatLens (Phase 1)
 
-ThreatLens is a small Python toolkit that reads local authentication-style logs, normalizes them into structured events, applies a brute-force detection rule, prints alerts to the console, and writes JSON artifacts for later analysis.
+# ThreatLens
 
-## Requirements
+ThreatLens is a modular **intrusion detection and monitoring system** built in Python.
 
-- Windows 10 or later
-- [Python 3.12.10](https://www.python.org/downloads/release/python-31210/) (64-bit recommended)
-- PowerShell
+It detects suspicious activity from:
+- authentication logs
+- website/server logs
+- network connection metadata
 
-## Setup (Windows PowerShell)
+and presents results through structured outputs and a visual dashboard.
 
-From the repository root (the folder that contains `app`, `config`, and `data`):
+---
 
-```powershell
-py -3.12 --version
+## Features
+
+- Log-based intrusion detection (brute-force login detection)
+- Website traffic analysis (request spikes, repeated hits)
+- Network monitoring (port scans, connection bursts)
+- JSON-based structured outputs
+- Interactive dashboard using Streamlit
+- Modular, extensible architecture
+
+---
+
+## Project Structure
+
+```
+ThreatLens/
+├── app/ # Core detection logic
+├── dashboard/ # Streamlit dashboard
+├── demo/ # Local demo environment (Phase 4)
+├── config/ # YAML configuration
+├── data/ # Input logs and sample data
+├── outputs/ # Generated results
+├── tests/ # Unit tests
+
 ```
 
-If `py` is not available, use the Python launcher path shown by the installer, or `python --version` after adding Python to `PATH`.
 
-Create and activate a virtual environment:
+
+---
+
+## Tech Stack
+
+- Python 3.12.10
+- pandas
+- Streamlit
+- Plotly
+- Scapy
+- PyYAML
+- pytest
+
+---
+
+## Setup (Windows)
 
 ```powershell
 py -3.12 -m venv .venv
 .\.venv\Scripts\Activate.ps1
-```
-
-If script execution is restricted, run once (as Administrator if required):
-
-```powershell
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-```
-
-Install dependencies:
-
-```powershell
 python -m pip install --upgrade pip
 pip install -r requirements.txt
+pip install -r requirements-dashboard.txt
+pip install -r requirements-network.txt
+pip install Flask
 ```
-
-## Run the detector
-
-Ensure your shell is still in the repository root with the virtual environment activated, then:
+## Run ThreatLens (Core Pipelines)
 
 ```powershell
 python -m app.main
+python -m app.web.web_runner --log-file data/live_web.log
+python -m app.network.network_runner --mode replay
 ```
 
-Outputs are written relative to the repository root:
 
-- `outputs/events.json` — normalized events
-- `outputs/alerts.json` — generated alerts
-- `outputs/summary.json` — run metadata and counters
+## Run Dashboard
+```powershell
+streamlit run dashboard\app.py
+```
 
-Log path and detection thresholds are configured in `config/settings.yaml`.
+Dashboard will open at:
 
-## Run tests
+http://localhost:8501
 
+
+## Demo
+
+Start local website:
+```powershell
+python demo\demo_server.py
+```
+## Generate traffic:
+```powershell
+python demo\generate_test_traffic.py
+python demo\generate_attack_traffic.py
+```
+## Run detection:
+```powershell
+python -m app.web.web_runner --log-file data/live_web.log
+```
+Then launch dashboard.
+
+## Outputs
+
+ThreatLens generates structured outputs in outputs/:
+
+### Authentication:
+- events.json
+- alerts.json
+### Website:
+- web_events.json
+- web_alerts.json
+### Network:
+- network_events.json
+- network_alerts.json
+## Detection Capabilities
+### Authentication
+- failed login tracking
+- brute-force detection
+### Website
+- request spikes
+- repeated requests from same IP
+- suspicious traffic patterns
+### Network
+- port scan detection
+- repeated connection attempts
+- burst traffic detection
+## Design Principles
+- modular architecture
+- typed Python models
+- config-driven thresholds
+- JSON outputs for interoperability
+- Windows-first compatibility
+## Tests
 ```powershell
 pytest
 ```
+## Future Enhancements
+- anomaly detection (machine learning)
+- real-time streaming pipeline
+- alert integrations (email, webhook)
+- multi-host monitoring
 
-## Log format
 
-`data/sample_auth.log` demonstrates the supported pipe-delimited format:
 
-```text
-ISO8601_timestamp | source_ip | service | username | STATUS | message
-```
-
-`STATUS` must be `FAIL` or `SUCCESS`. Lines beginning with `#` and blank lines are ignored. Malformed lines are skipped without stopping the run.
-
-## License
-
-Provide your own license as needed for your environment.
