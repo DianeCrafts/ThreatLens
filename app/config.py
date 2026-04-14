@@ -12,6 +12,9 @@ class PathsConfig(BaseModel):
     events_output: Path
     alerts_output: Path
     summary_output: Path
+    web_log_file: Path
+    web_events_output: Path
+    web_alerts_output: Path
 
 
 class BruteForceConfig(BaseModel):
@@ -19,8 +22,28 @@ class BruteForceConfig(BaseModel):
     time_window_seconds: int = Field(..., ge=1)
 
 
+class SuspiciousWebConfig(BaseModel):
+    """More than this many requests from one IP inside the window triggers an alert."""
+
+    request_threshold: int = Field(..., ge=1)
+    time_window_seconds: int = Field(..., ge=1)
+
+
+class TrafficSpikeConfig(BaseModel):
+    """Global request volume above threshold inside the window triggers an alert."""
+
+    window_seconds: int = Field(..., ge=1)
+    min_requests_in_window: int = Field(..., ge=1)
+
+
+class WebDetectionConfig(BaseModel):
+    suspicious_ip: SuspiciousWebConfig
+    traffic_spike: TrafficSpikeConfig
+
+
 class DetectionConfig(BaseModel):
     brute_force: BruteForceConfig
+    web: WebDetectionConfig
 
 
 class AppSettings(BaseModel):
@@ -32,7 +55,16 @@ class AppSettings(BaseModel):
         raw: dict[str, Any] = yaml.safe_load(config_path.read_text(encoding="utf-8"))
         project_root = config_path.parent.parent
         paths_raw = dict(raw.get("paths", {}))
-        for key in ("log_file", "events_output", "alerts_output", "summary_output"):
+        path_keys = (
+            "log_file",
+            "events_output",
+            "alerts_output",
+            "summary_output",
+            "web_log_file",
+            "web_events_output",
+            "web_alerts_output",
+        )
+        for key in path_keys:
             if key in paths_raw and paths_raw[key] is not None:
                 paths_raw[key] = (project_root / Path(str(paths_raw[key]))).resolve()
         merged = {"paths": paths_raw, "detection": raw.get("detection", {})}

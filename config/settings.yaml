@@ -3,8 +3,18 @@ paths:
   events_output: outputs/events.json
   alerts_output: outputs/alerts.json
   summary_output: outputs/summary.json
+  web_log_file: data/sample_web.log
+  web_events_output: outputs/web_events.json
+  web_alerts_output: outputs/web_alerts.json
 
 detection:
   brute_force:
     failed_attempt_threshold: 5
     time_window_seconds: 300
+  web:
+    suspicious_ip:
+      request_threshold: 25
+      time_window_seconds: 60
+    traffic_spike:
+      window_seconds: 120
+      min_requests_in_window: 80

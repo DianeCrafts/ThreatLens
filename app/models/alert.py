@@ -11,7 +11,11 @@ class Alert(BaseModel):
 
     alert_id: str
     timestamp: datetime
-    alert_type: Literal["brute_force"]
+    alert_type: Literal[
+        "brute_force",
+        "suspicious_web_activity",
+        "traffic_spike",
+    ]
     severity: Literal["LOW", "MEDIUM", "HIGH", "CRITICAL"]
     source_ip: str
     message: str
