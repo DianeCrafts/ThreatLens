@@ -6,6 +6,9 @@ paths:
   web_log_file: data/sample_web.log
   web_events_output: outputs/web_events.json
   web_alerts_output: outputs/web_alerts.json
+  network_packets_replay: data/sample_packets.json
+  network_events_output: outputs/network_events.json
+  network_alerts_output: outputs/network_alerts.json
 
 detection:
   brute_force:
@@ -18,3 +21,10 @@ detection:
     traffic_spike:
       window_seconds: 120
       min_requests_in_window: 80
+  network:
+    port_scan:
+      min_unique_destination_ports: 15
+      time_window_seconds: 60
+    repeated_connections:
+      min_connection_attempts: 30
+      time_window_seconds: 45

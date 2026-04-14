@@ -15,6 +15,9 @@ class PathsConfig(BaseModel):
     web_log_file: Path
     web_events_output: Path
     web_alerts_output: Path
+    network_packets_replay: Path
+    network_events_output: Path
+    network_alerts_output: Path
 
 
 class BruteForceConfig(BaseModel):
@@ -41,9 +44,29 @@ class WebDetectionConfig(BaseModel):
     traffic_spike: TrafficSpikeConfig
 
 
+class PortScanRuleConfig(BaseModel):
+    """More than this many distinct destination ports from one source in the window."""
+
+    min_unique_destination_ports: int = Field(..., ge=1)
+    time_window_seconds: int = Field(..., ge=1)
+
+
+class RepeatedConnectionsRuleConfig(BaseModel):
+    """More than this many observations from one source in the window."""
+
+    min_connection_attempts: int = Field(..., ge=1)
+    time_window_seconds: int = Field(..., ge=1)
+
+
+class NetworkDetectionConfig(BaseModel):
+    port_scan: PortScanRuleConfig
+    repeated_connections: RepeatedConnectionsRuleConfig
+
+
 class DetectionConfig(BaseModel):
     brute_force: BruteForceConfig
     web: WebDetectionConfig
+    network: NetworkDetectionConfig
 
 
 class AppSettings(BaseModel):
@@ -63,6 +86,9 @@ class AppSettings(BaseModel):
             "web_log_file",
             "web_events_output",
             "web_alerts_output",
+            "network_packets_replay",
+            "network_events_output",
+            "network_alerts_output",
         )
         for key in path_keys:
             if key in paths_raw and paths_raw[key] is not None:

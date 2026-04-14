@@ -15,6 +15,8 @@ class Alert(BaseModel):
         "brute_force",
         "suspicious_web_activity",
         "traffic_spike",
+        "port_scan",
+        "repeated_connections",
     ]
     severity: Literal["LOW", "MEDIUM", "HIGH", "CRITICAL"]
     source_ip: str
